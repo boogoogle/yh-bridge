@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=false">
+    <title>BridgeWithiOS</title>
+    <style>
+        html,
+        body {
+            /* background: #D2DEEF; */
+            background-color: #D6DFEA;
+        }
+        #app {
+            /* background-color: #D6DFEA; */
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            width: 200px;
+            height: 40px;
+            background-color: #D2DEEF;
+            border: 1px solid #fff;
+            border-radius: 4px;
+            box-shadow: 1px, 6px, 12px, rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .errorMessage {
+            border: 1px solid red;
+            padding: 6px;
+            color: red;
+        }
+    </style>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<body>
+    <div id="bridgeReady"></div>
+    <div id="app">
+        <!-- <h2>    {{message}}</h2> -->
+        <button @click="getDeviceInfo()">获取设备信息</button>
+
+        <button @click="toast()">Toast</button>
+
+        <div class="deviceInfo">
+            <p v-for="item in deviceInfoArr" :key="item.key">
+                <span>{{item.key}}: {{item.value}}</span>
+            </p>
+        </div>
+        <div class="errorMessage" v-if="errorMessage">
+            {{errorMessage}}
+        </div>
+
+    </div>
+    
+</body>
+<script>
+    var yhBridgeCallbacks = {
+        successMap: {},
+        failMap: {}
+    }
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            deviceInfo: {},
+            deviceInfoArr: [],
+            errorMessage: null
+        },
+        methods: {
+            getDeviceInfo(){
+                const self = this
+                const params = {
+                    action: 'getDeviceInfo',
+                    // 参数直接写,不用params再包一层了,因为swift处理json麻烦
+                    date: '1111', user: 'tony',
+                }
+
+                yhBridgeCallbacks.successMap['getDeviceInfo'] = (info) => {
+                    try {
+                        this.deviceInfo = null
+                        this.deviceInfo = JSON.parse(info)
+                        Object.keys(this.deviceInfo).forEach(key=> {
+                            self.deviceInfoArr.push({
+                                key,
+                                value: this.deviceInfo[key]
+                            })
+                        })
+                    } catch (e){
+                        this.errorMessage = e
+                    }
+                    console.log(info)
+                    return "执行成功???" + info
+                        
+                }
+
+                let str = JSON.stringify(params)
+                if (window.webkit && window.webkit.messageHandlers) {
+                    window.webkit.messageHandlers.yhBridge.postMessage(str)
+                } 
+            },
+
+            toast() {
+                let content = "我从webView来告诉你toast什么"
+                const params = {
+                    action: "toast",
+                    content,
+                }
+                const str = JSON.stringify(params)
+                if (window.webkit && window.webkit.messageHandlers) {
+                    window.webkit.messageHandlers.yhBridge.postMessage(str)
+                } 
+            }
+        },
+    })
+
+</script>
+<script src="./index.js"></script>
+</html>

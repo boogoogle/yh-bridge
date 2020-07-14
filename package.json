@@ -1,0 +1,14 @@
+{
+  "name": "yhbridge",
+  "version": "1.0.0",
+  "description": "- [使用parcel](https://www.parceljs.cn/getting_started.html)   - `parcel index.html`",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html --port 9876 & node utils.node.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^1.12.4"
+  }
+}
