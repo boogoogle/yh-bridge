@@ -1,4 +1,5 @@
 ### 开发指南
+  - 把项目根目录下的SwiftDemos.app拖到Xcode模拟器中,安装完成后打开(Xcode要求最新版本)
   - `yarn && yarn dev`
   - 根据控制台提示,把局域网地址(不是localhost那个!!!)复制到模拟器中打开
   - [使用parcel](https://www.parceljs.cn/getting_started.html)
