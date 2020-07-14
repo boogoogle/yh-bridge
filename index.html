@@ -94,18 +94,20 @@
                         this.errorMessage = e
                     }
                     console.log(info)
-                    return "执行成功???" + info
+                    return "执行成功???" + info  // return的数据能够被iOS拿到,但是Android是否能拿到,尚未开始
                         
                 }
 
                 let str = JSON.stringify(params)
                 if (window.webkit && window.webkit.messageHandlers) {
+                    // 也可以通过其他方式,诸如iframe, alert,直接打开schema的方式
+                    // 但是这里选择postMessage方式,需要给个理由
                     window.webkit.messageHandlers.yhBridge.postMessage(str)
                 } 
             },
 
             toast() {
-                let content = "我从webView来告诉你toast什么"
+                let content = "你查询的内容不存在,滚"
                 const params = {
                     action: "toast",
                     content,
